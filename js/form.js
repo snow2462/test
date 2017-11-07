@@ -15,7 +15,7 @@ function CheckValidator(form_id) {
             $(this).addClass("error_input");
             if(msg_error!="" && msg_error !== undefined)
             {
-                $("#error_message").append("<div class='err_box'><p style='color:#C00;font-weight:bold'>" + msg_error + "</p></div>");
+                $("#error_message").append("<div class='err_box'><p style='color:#C00;'>" + msg_error + "</p></div>");
             }
             isRequired = 0;
         } else
@@ -24,7 +24,7 @@ function CheckValidator(form_id) {
             $(this).filter(".email").each(function () {
                 if (!ck_email.test($(this).val())) {
                     $(this).addClass("error_input");
-                    $("#error_message").append("<div class='err_box'><p style='color:#C00;font-weight:bold'>Please enter the correct email format</p></div>");
+                    $("#error_message").append("<div class='err_box'><p style='color:#C00;'>Please enter the correct email format</p></div>");
                     isRequired = 0;
                 }
             });
@@ -32,7 +32,7 @@ function CheckValidator(form_id) {
             $(this).filter(".password").each(function(){
                 if (!ck_password.test($(this).val())) {
                     $(this).addClass("error_input");
-                    $("#error_message").append("<div class='err_box'><span style='color:#C00;font-weight:bold'>The password's first character must be a letter, it must contain at least 4 characters and no more than 15 characters and no characters other than letters, numbers and the underscore may be used</span></div>");
+                    $("#error_message").append("<div class='err_box'><span style='color:#C00;'>The password's first character must be a letter, it must contain at least 4 characters and no more than 15 characters and no characters other than letters, numbers and the underscore may be used</span></div>");
                     isRequired = 0;
                 }
             });

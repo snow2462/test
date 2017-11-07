@@ -14,8 +14,8 @@ if (isset($_POST['done'])) {
     } else {
         $con->query("INSERT IGNORE INTO list (`itemId`, `itemName`, `description`, `price`, `availability`)
                             VALUES('{$id}','{$name}', '{$description}', '{$price}', '{$availability}')");
+        echo 'The item ' .$name . ' has been inserted to database';
     }
-    echo 'The item ' .$name . ' has been inserted to database';
 }
 
 
