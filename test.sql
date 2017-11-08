@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 06, 2017 at 05:13 AM
+-- Generation Time: Nov 08, 2017 at 08:22 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -32,14 +32,16 @@ CREATE TABLE IF NOT EXISTS `account` (
   `password` char(40) DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
   `email` varchar(300) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `account`
 --
 
 INSERT INTO `account` (`memberId`, `username`, `password`, `name`, `email`) VALUES
-(0, '', '', '', '');
+(1, '12312', 'Kiem2801', '123123', 'asdsad@yahoo.com'),
+(2, 'fsdfsdfsdf', 'Kiem2801', '32423', 'sdfsdf@yahoo.com'),
+(3, 'snow2462', 'Kiem2801', 'kiem', 'kiemngocto@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -54,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `list` (
   `price` float DEFAULT NULL,
   `availability` tinyint(1) DEFAULT NULL,
   `categoryId` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `list`
@@ -71,7 +73,8 @@ INSERT INTO `list` (`itemId`, `itemName`, `description`, `price`, `availability`
 (8, 'Japanese Saws', 'A family of pull saws known for a thinner blade with crosscut teeth on one side and rip teeth on the other. These saws make cutting dense wood easy by first starting a guide path with the crosscut edge, then switching over to finish the cut with the rip-teeth edge. The Ryoba style is the most useful type.', 3.99, 1, 2),
 (9, 'Coping Saw', 'Popular with artists, this simple but useful cutting tool consists of a thin blade tensioned in a C-shaped frame that uses interchangeable blades for both metal and wood. It can cut tight radius but perhaps its most useful feature is the ability to remove the blade and thread it through a drilled hole to cut inside profiles.', 7.99, 1, 2),
 (10, 'フリガナ', '商品一覧ページです。オシャレで可愛いiphoneケース、スマートフォンケース、IQOSケースのオンラインショップPOWER POWERです。', 7, 7, 0),
-(11, '12321321', 'お買い物ガイドページです。オシャレで可愛いiphoneケース、スマートフォンケース、IQOSケースのオンラインショップPOWER POWERです。', 4, 4, 0);
+(11, '12321321', 'お買い物ガイドページです。オシャレで可愛いiphoneケース、スマートフォンケース、IQOSケースのオンラインショップPOWER POWERです。', 4, 4, 0),
+(12, 'sdfsdf', '商品一覧ページです。オシャレで可愛いiphoneケース、スマートフォンケース、IQOSケースのオンラインショップPOWER POWERです。', 7, 7, 0);
 
 --
 -- Indexes for dumped tables
@@ -94,10 +97,15 @@ ALTER TABLE `list`
 --
 
 --
+-- AUTO_INCREMENT for table `account`
+--
+ALTER TABLE `account`
+  MODIFY `memberId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
 -- AUTO_INCREMENT for table `list`
 --
 ALTER TABLE `list`
-  MODIFY `itemId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
+  MODIFY `itemId` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
