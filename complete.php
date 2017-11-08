@@ -10,7 +10,7 @@
 
 </div>
 <div id="registerForm">
-   <p style="text-align: center">Thank you for registering with out website</p>
+   <p style="text-align: center">Thank you for registering with our website</p>
 </div>
 </body>
 </html>

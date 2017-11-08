@@ -58,9 +58,10 @@ if(isset($_POST['submit']))
 <script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>
 <body>
 <h3>Sign Up</h3>
-<div id="error_message">
-
+<div id="confirm_message">
+<p>Please confirm your information below.</p>
 </div>
+
 <div id="registerForm">
     <form method="post">
         <table border='1' id='user_data' >
@@ -82,7 +83,7 @@ if(isset($_POST['submit']))
                 <td><?php echo $_SESSION["contact"]["memberEmail"]?></td>
             </tr>
             <tr>
-                <td colspan="2" style="text-align: center"><button  type='submit' name="submit" id='registerButton'><i class="fa fa-registered"></i> Submit</button></td>
+                <td colspan="2" style="text-align: center"><button  type='submit' name="submit" id='registerButton'><i class="fa fa-registered"></i> Confirm</button></td>
             </tr>
 
         </table>

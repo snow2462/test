@@ -8,11 +8,13 @@ $(document).ready(function () {
             contentType: "application/x-www-form-urlencoded;charset=utf-8",
             dataType: "html",   //expect html to be returned
             success: function (response) {
+                $("#responsecontainer").html('');
                 $("#responsecontainer").html(response);
                 //alert(response);
             }
         });
     }
+
 
     function updateData(id, column_name, value) {
         $.ajax({

@@ -43,5 +43,7 @@ class mail_form
             }
         }
         return $res;
+
     }
 }
+

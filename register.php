@@ -19,9 +19,7 @@ if(isset($_POST['send']))
         "memberUsername"=> "Username",
         "password" => "Password",
         "memberEmail" => "Email");
-
     $requireValueCheck = $process->requireCheck($requireValue);
-    echo $requireValueCheck["empty_flag"];
     if(!$requireValueCheck["empty_flag"])
     {
 
@@ -30,16 +28,18 @@ if(isset($_POST['send']))
         $queryCheck = $con->query($checkUser);
         if($queryCheck->num_rows > 0)
         {
-            $emailErrorMessage = "<p class =\"error_mess\" style=\"color:#C00;\"> Username has already existed. Please choose a different username.</p>";
+            $emailErrorMessage = "<p class =\"error_mess\" style=\"color:#C00;\"> This username has already been taken. Please choose a different username.</p>";
             $valueExist = false;
         }
+
         if(!filter_var($_POST["memberEmail"], FILTER_VALIDATE_EMAIL)) {
             $emailErrorMessage = '<p class ="error_mess" style="color:#C00;"> Please enter the correct form of email</p>';
             $valueExist = false;
         }
+
         if ($valueExist)
         {
-            echo "<scrip> window.location.href = 'confirm.php#registerForm' </scrip>";
+            echo "<script> window.location.href = 'confirm.php#registerForm' </script>";
             Header("Location: confirm.php#registerForm");
             exit;
         }
@@ -53,6 +53,7 @@ if(isset($_POST['send']))
         $error = $requireValueCheck["errm"];
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html>
