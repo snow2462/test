@@ -37,6 +37,11 @@ if (isset($_POST["log-in"])) {
     }
 }
 
+ if(isset($_POST["logout"]))
+ {
+     echo "<script> alert('logout');</script>";
+     $isLogin = 0;
+ }
 ?>
 <!DOCTYPE html>
 <html>
@@ -98,6 +103,7 @@ if (isset($_POST["log-in"])) {
         </div>
     <?php else: ?>
         <p>Thank you for coming back <?php echo $username; ?></p>
+        <p><a href=".">Logout</a></p>
     <?php endif; ?>
 </div>
 <h3 align="center">Manage Tool Details</h3>

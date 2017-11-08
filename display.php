@@ -54,6 +54,7 @@ if ($rowCount > 0) {
 <td align=center><b>Description</b></td>
 <td align=center><b>Price</b></td>
 <td align=center><b>Availabity</b></td>
+<td align=center><b>Edit</b></td>
 <td align=center><b>Delete</b></td>";
 
 
@@ -64,7 +65,8 @@ if ($rowCount > 0) {
         echo "<td contenteditable class=\"update\" data-id=$data[0] data-column='description' >$data[2]</td>";
         echo "<td contenteditable class=\"update\" data-id=$data[0] data-column='price' align=center>$data[3]</td>";
         echo "<td contenteditable class=\"update\" data-id=$data[0] data-column='availability' align=center>$data[4]</td>";
-        echo "<td contenteditable class=\"update\" data-id=$data[0] align=center ><button data-id=$data[0] id='delete' value='Delete' class='delete'><i class=\"fa fa-trash\"></i></button></td>";
+        echo "<td  data-id=$data[0] align=center ><button data-id=$data[0] id='edit' value='Edit' class='edit' onclick='location.href = \"edit.php\"'><i class=\"fa fa-pencil-square-o\"></i></button></td>";
+        echo "<td class=\"update\" data-id=$data[0] align=center ><button data-id=$data[0] id='delete' value='Delete' class='delete'><i class=\"fa fa-trash\"></i></button></td>";
         echo "</tr>";
 
     }
@@ -75,7 +77,7 @@ if ($rowCount > 0) {
 <td><input type=\"text\" id=\"description\"></td>
 <td><input type=\"text\" id=\"price\" onkeypress=\"return checknumber(event,'price')\"></td>
 <td><input type=\"text\" id=\"availability\" onkeypress=\"return checknumber(event,'availability')\"></td>
-<td align=center><button id=\"submit\" value=\"Add\"><i class=\"fa fa-plus\"></i></button></td>
+<td align=center colspan='2'><button id=\"submit\" value=\"Add\"><i class=\"fa fa-plus\"></i></button></td>
 </tr>";
     echo "</table>
 ";
