@@ -5,7 +5,7 @@ require("mail.php");
 include_once("api.php");
 $process = new mail_form();
 $allowEdit = 0;
-$isLogin = 1;
+$isLogin = 0;
 if (isset($_POST["log-in"])) {
     $valueExist = true;
     foreach ($_POST as $key => $value) {
@@ -29,7 +29,7 @@ if (isset($_POST["log-in"])) {
             $valueExist = false;
         }
         if ($valueExist) {
-            $isLogin = 0;
+            $isLogin = 1;
             $allowEdit = 1;
         } else {
             $error = $emailErrorMessage;
@@ -46,7 +46,6 @@ if (isset($_POST["log-in"])) {
 <script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>
 <?php if ($allowEdit != 0): ?>
     <script type="text/javascript" src="/js/script.js"></script>
-<?php echo $emptyField; ?>
     <script>
         function searchFilter(page_num) {
             page_num = page_num ? page_num : 0;
@@ -71,7 +70,7 @@ if (isset($_POST["log-in"])) {
 <body>
 
 <div id="login-field">
-    <?php if ($isLogin != 0): ?>
+    <?php if ($isLogin != 1): ?>
         <?php if ($error) echo "<div class='txt-contact'>" . $error . "</div>"; ?>
         <form method="post" onsubmit="return CheckValidator('login-form')" id="login-form">
             <table id="login-table">
