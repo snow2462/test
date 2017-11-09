@@ -33,12 +33,11 @@ $(document).ready(function () {
                 displayData();
             }
         });
-        setTimeout(function() {
-            $('#message').html('')
-        }
-        , 5000);
+        setTimeout(function () {
+                $('#message').html('')
+            }
+            , 5000);
     }
-
 
 
     $(document).on('click', '#submit', function () {
@@ -72,7 +71,7 @@ $(document).ready(function () {
                     displayData();
                 }
             });
-            setTimeout(function() {
+            setTimeout(function () {
                     $('#message').html('')
                 }
                 , 5000);
@@ -99,12 +98,13 @@ $(document).ready(function () {
                     displayData();
                 }
             });
-            setTimeout(function() {
+            setTimeout(function () {
                     $('#message').html('')
                 }
                 , 5000);
         }
     });
+
 
     $(document).on('blur', '.update', function () {
         var id = $(this).attr("data-id");

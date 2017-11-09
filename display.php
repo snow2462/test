@@ -2,11 +2,11 @@
 include('/class/Pagination.php');
 include("api.php");
 // determine the page number
-$start = !empty($_POST['page'])?$_POST['page']:0;
+$start = !empty($_POST['page']) ? $_POST['page'] : 0;
 $limit = 10;
 global $whereSQL;
 global $orderSQL;
-if(isset($_POST['itemName'])) {
+if (isset($_POST['itemName'])) {
     $whereSQL = $orderSQL = '';
 
     $keywords = $_POST['itemName'];
@@ -29,8 +29,8 @@ $rowCount = $resultNum['itemId'];
 
 // Initialize pagination class
 $pageConfig = array(
-    'baseURL'=>'display.php',
-    'currentPage'=>$start,
+    'baseURL' => 'display.php',
+    'currentPage' => $start,
     'totalRows' => $rowCount,
     'perPage' => $limit,
     'link_func' => 'searchFilter',
@@ -38,7 +38,7 @@ $pageConfig = array(
 $pagination = new Pagination($pageConfig);
 
 // get rows
-$result = $con->query("SELECT * FROM list " .$whereSQL.$orderSQL. " LIMIT " . $start . " , " . $limit);
+$result = $con->query("SELECT * FROM list " . $whereSQL . $orderSQL . " LIMIT " . $start . " , " . $limit);
 
 $maxID = $con->query("SELECT MAX(itemId) AS MAX FROM `list`");
 $row = $maxID->fetch_array();
@@ -65,7 +65,10 @@ if ($rowCount > 0) {
         echo "<td contenteditable class=\"update\" data-id=$data[0] data-column='description' >$data[2]</td>";
         echo "<td contenteditable class=\"update\" data-id=$data[0] data-column='price' align=center>$data[3]</td>";
         echo "<td contenteditable class=\"update\" data-id=$data[0] data-column='availability' align=center>$data[4]</td>";
-        echo "<td  data-id=$data[0] align=center ><button data-id=$data[0] id='edit' value='Edit' class='edit' onclick='location.href = \"edit.php\"'><i class=\"fa fa-pencil-square-o\"></i></button></td>";
+        echo "<td  data-id=$data[0] align=center >
+<form action = \"\" method = \"post\">
+<input type='submit' data-id=$data[0] name='edit' id='edit' class='edit' value='$data[0]'>
+</form></td>";
         echo "<td class=\"update\" data-id=$data[0] align=center ><button data-id=$data[0] id='delete' value='Delete' class='delete'><i class=\"fa fa-trash\"></i></button></td>";
         echo "</tr>";
 
@@ -82,6 +85,6 @@ if ($rowCount > 0) {
     echo "</table>
 ";
 
-echo $pagination->createLinks();
+    echo $pagination->createLinks();
 }
 ?>

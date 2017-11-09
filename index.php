@@ -37,11 +37,14 @@ if (isset($_POST["log-in"])) {
     }
 }
 
- if(isset($_POST["logout"]))
- {
-     echo "<script> alert('logout');</script>";
-     $isLogin = 0;
- }
+if (isset($_POST["edit"])) {
+    if (isset($_POST["edit"])) {
+        $_SESSION['id'] = $_POST;
+        echo "<scrip> window.location.href = 'edit.php' </scrip>";
+        Header("Location: edit.php");
+        exit;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
