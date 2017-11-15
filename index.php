@@ -8,6 +8,7 @@ $allowEdit = 0;
 $isLogin = 0;
 if (isset($_POST["log-in"])) {
     $valueExist = true;
+    unset($_SESSION["contact"]);
     foreach ($_POST as $key => $value) {
         $_SESSION["contact"][$key] = $process->dataFilter($value);
     }
