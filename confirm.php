@@ -16,7 +16,10 @@ if(isset($_POST['submit']))
         "memberName"=>"Name",
         "memberUsername"=> "Username",
         "password" => "Password",
-        "memberEmail" => "Email");
+        "memberEmail" => "Email",
+        'gender' => 'Gender',
+        'checkbox' => 'option'
+    );
 
     $requireValueCheck = $process->requireCheck($requireValue);
     if(!$requireValueCheck["empty_flag"])
@@ -25,16 +28,20 @@ if(isset($_POST['submit']))
         $password = $_SESSION["contact"]["password"];
         $name = $_SESSION["contact"]["memberName"];
         $email = $_SESSION["contact"]["memberEmail"];
+        $gender = $_SESSION["contact"]["gender"];
+        $option = $_SESSION["contact"]["checkbox"];
         $maxID = $con->query("SELECT MAX(memberId) AS MAX FROM `account`");
         $row = $maxID->fetch_array();
         $largestNumber = $row['MAX'];
         $largestNumber++;
         $valueExist = true;
-        $query = "INSERT INTO account (`memberId`, `username`, `password`, `name`, `email`) 
-            VALUES ('{$largestNumber}', '{$username}', '{$password}', '{$name}', '{$email}')";
+        $query = "INSERT INTO account (`memberId`, `username`, `password`, `name`, `email`, `gender`, `option`) 
+            VALUES ('{$largestNumber}', '{$username}', '{$password}', '{$name}', '{$email}', '{$gender}', '{$option}')";
         $con->query($query);
         if($valueExist)
         {
+            unset($_POST);
+            unset($_SESSION["contact"]);
             echo "<scrip> window.location.href = 'complete.php#registerForm' </scrip>";
             Header("Location: complete.php#registerForm");
             exit;
@@ -81,6 +88,14 @@ if(isset($_POST['submit']))
             <tr>
                 <td>Email: </td>
                 <td><?php echo $_SESSION["contact"]["memberEmail"]?></td>
+            </tr>
+            <tr>
+                <td>Gender: </td>
+                <td><?php echo $_SESSION["contact"]["gender"]?></td>
+            </tr>
+            <tr>
+                <td>Option: </td>
+                <td><?php echo $_SESSION["contact"]["checkbox"]?></td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: center"><button  type='submit' name="submit" id='registerButton'><i class="fa fa-registered"></i> Confirm</button></td>

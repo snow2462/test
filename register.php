@@ -5,51 +5,56 @@ require("mail.php");
 include("api.php");
 $process = new mail_form();
 
-if(isset($_POST['send']))
-{
+if (isset($_POST['send'])) {
     $valueExist = true;
     unset($_SESSION["contact"]);
-    foreach ($_POST as $key => $value){
+    foreach ($_POST as $key => $value) {
+        if(gettype($_POST[$key]) == "array")
+        {
+            foreach ($_POST[$key] as $k => $value) {
+                $_SESSION["contact"][$key][] = $value;
+                $tmp .= $value.", ";
+                }
+                $_SESSION["contact"]["$key"] = rtrim($tmp,", ");
+                $tmp="";
+        }
+        else{
         $_SESSION["contact"][$key] = $process->dataFilter($value);
+            }
     }
 
     $_POST = $_SESSION["contact"];
     $requireValue = array(
-        "memberName"=>"Name",
-        "memberUsername"=> "Username",
+        "memberName" => "Name",
+        "memberUsername" => "Username",
         "password" => "Password",
-        "memberEmail" => "Email");
+        "memberEmail" => "Email",
+        "gender" => 'Gender',
+        "checkbox" => 'Option'
+        );
     $requireValueCheck = $process->requireCheck($requireValue);
-    if(!$requireValueCheck["empty_flag"])
-    {
-
+    if (!$requireValueCheck["empty_flag"]) {
         $username = $_SESSION["contact"]["memberUsername"];
-        $checkUser = "SELECT * FROM account WHERE userName = '" . $username ."'";
+        $checkUser = "SELECT * FROM account WHERE userName = '" . $username . "'";
         $queryCheck = $con->query($checkUser);
-        if($queryCheck->num_rows > 0)
-        {
+        if ($queryCheck->num_rows > 0) {
             $emailErrorMessage = "<p class =\"error_mess\" style=\"color:#C00;\"> This username has already been taken. Please choose a different username.</p>";
             $valueExist = false;
         }
 
-        if(!filter_var($_POST["memberEmail"], FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($_POST["memberEmail"], FILTER_VALIDATE_EMAIL)) {
             $emailErrorMessage = '<p class ="error_mess" style="color:#C00;"> Please enter the correct form of email</p>';
             $valueExist = false;
         }
 
-        if ($valueExist)
-        {
+        if ($valueExist) {
             echo "<script> window.location.href = 'confirm.php#registerForm' </script>";
             Header("Location: confirm.php#registerForm");
             exit;
-        }
-        else
-        {
+        } else {
             $error = $emailErrorMessage;
         }
-    }
-    else
-    {
+    } else {
         $error = $requireValueCheck["errm"];
     }
 }
@@ -120,33 +125,69 @@ if(isset($_POST['send']))
 
 </div>
 <div id="registerForm">
-    <?php if($error) echo "<div class='txt-contact'>".$error."</div>"; ?>
-<form method="post" id='regisForm' name='regisForm' onsubmit="return CheckValidator('regisForm')" action="register.php#registerForm">
-<table border='1' id='user_data' >
-<tr>
-<td>Name: </td>
-<td><input type='text' id='memberName' name="memberName" msg_error="Please enter your name" class="requiredf" value="<?php echo $_SESSION["contact"]["memberName"]?>"></td>
-</tr>
-<tr>
-<td>Username: </td>
-<td><input type='text' id='memberUsername' name="memberUsername" msg_error="Please enter your username" class="requiredf" value="<?php echo $_SESSION["contact"]["memberUsername"]?>"></td>
-</tr>
-<tr>
-<td>Password: </td>
-<td><input type='text' name="password" id='memberPassword' msg_error="Please enter your password" class="requiredf password" value="<?php echo $_SESSION["contact"]["memberPassword"]?>">
-</td>
-</tr>
+    <?php if ($error) echo "<div class='txt-contact'>" . $error . "</div>"; ?>
+    <form method="post" id='regisForm' name='regisForm' onsubmit="return CheckValidator('regisForm')"
+          action="register.php#registerForm">
+        <table border='1' id='user_data' width="50%">
+            <tr>
+                <td>Name:</td>
+                <td colspan="2"><input type='text' id='memberName' name="memberName" msg_error="Please enter your name"
+                                       class="requiredf" value="<?php echo $_SESSION["contact"]["memberName"] ?>"></td>
+            </tr>
+            <tr>
+                <td>Username:</td>
+                <td colspan="2"><input type='text' id='memberUsername' name="memberUsername"
+                                       msg_error="Please enter your username" class="requiredf"
+                                       value="<?php echo $_SESSION["contact"]["memberUsername"] ?>"></td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td colspan="2"><input type='text' name="password" id='memberPassword'
+                                       msg_error="Please enter your password" class="requiredf password"
+                                       value="<?php echo $_SESSION["contact"]["memberPassword"] ?>">
+                </td>
+            </tr>
 
-<tr>
-<td>Email: </td>
-<td><input type='text' id='memberEmail' name="memberEmail" msg_error="Please enter your email" class="requiredf email" value="<?php echo $_SESSION["contact"]["memberEmail"]?>"></td>
-</tr>
-    <tr>
-        <td colspan="2" style="text-align: center"><button  type='submit' name="send" id='send'><i class="fa fa-registered"></i> Submit</button></td>
-    </tr>
+            <tr>
+                <td>Email:</td>
+                <td colspan="2"><input type='text' id='memberEmail' name="memberEmail"
+                                       msg_error="Please enter your email" class="requiredf email"
+                                       value="<?php echo $_SESSION["contact"]["memberEmail"] ?>"></td>
+            <tr>
+                <td>Gender:</td>
+                <td><input type="radio" name="gender" <?php if ($_SESSION["contact"]["gender"]) {
+                        echo ($_SESSION["contact"]["gender"] == "male") ? "checked" : " ";
+                    } ?> value="male"/>Male
+                </td>
+                <td><input type="radio" name="gender" <?php echo ($_SESSION["contact"]["gender"] == "female") ?: " "; ?>
+                           value="female"/>Female
+                </td>
+            </tr>
+            <tr>
+                <td>Option:</td>
+                <?php $value_checked = explode(', ', $_SESSION["contact"]["checkbox"]); ?>
+                <td colspan="2">
+                    <label style="display: block">
+                        <input type="checkbox"
+                               name="checkbox[]" <?php echo (in_array('Saw')) ? "checked" : " "; ?>
+                               value="Saw"/>Saw
+                    </label>
+                    <label style="display: block">
+                        <input type="checkbox"
+                               name="checkbox[]" <?php echo (in_array('Drill')) ? "checked" : " "; ?>
+                               value="Drill"/>Drill
+                    </label>
+                </td>
 
-</table>
-</form>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align: center">
+                    <button type='submit' name="send" id='send'><i class="fa fa-registered"></i> Submit</button>
+                </td>
+            </tr>
+
+        </table>
+    </form>
 </div>
 <script type="text/javascript" src="/js/form.js"></script>
 </body>
