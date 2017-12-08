@@ -1,19 +1,24 @@
 <?php
 include("api.php");
-
+include('newConnection.php');
 if (isset($_POST['done'])) {
-    $id = $con->escape_string($_POST['id']);
-    $name = $con->escape_string($_POST['itemName']);
-    $description = $con->escape_string($_POST['description']);
-    $price = $con->escape_string($_POST['price']);
-    $availability = $con->escape_string($_POST['availability']);
-    $checkItem = "SELECT * FROM list WHERE itemName = '" . $name . "'";
-    $queryCheck = $con->query($checkItem);
-    if ($queryCheck->num_rows > 0) {
+    $id = $_POST['id'];
+    $name = $_POST['itemName'];
+    $description = $_POST['description'];
+    $price = $_POST['price'];
+    $availability = $_POST['availability'];
+    $checkItem = $dbh->prepare("SELECT * FROM list WHERE itemName = :itemName");
+    $checkItem->execute(array(':itemName' => $name));
+    if ($checkItem->rowCount() > 0) {
         echo "Item has already existed in database";
     } else {
-        $con->query("INSERT IGNORE INTO list (`itemId`, `itemName`, `description`, `price`, `availability`)
-                            VALUES('{$id}','{$name}', '{$description}', '{$price}', '{$availability}')");
+        $addItem = $dbh->prepare("INSERT INTO list(`itemId`, `itemName`, `description`, `price`, `availability`) VALUES(:itemId,:itemName,:description,:price,:availability)");
+        $addItem->execute(array(
+            ':itemId' => $id,
+            ':itemName' => $name,
+            ':description' => $description,
+            ':price' => $price,
+            ':availability' => $availability));
         echo 'The item ' .$name . ' has been inserted to database';
     }
 }

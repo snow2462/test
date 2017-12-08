@@ -1,6 +1,7 @@
 <?php
 include('/class/Pagination.php');
-include("api.php");
+include("newConnection.php");
+
 // determine the page number
 $start = !empty($_POST['page']) ? $_POST['page'] : 0;
 $limit = 10;
@@ -21,9 +22,17 @@ if (isset($_POST['itemName'])) {
         $orderSQL = " ORDER BY itemId DESC ";
     }
 }
+try{
+  $stmt = $dbh->query("SELECT COUNT(*) AS itemId FROM list");
+  $resultNum = $stmt->fetch(PDO::FETCH_ASSOC);
+} catch(PDOException $exception)
+{
+    echo "An error occurred";
+}
+
 // get the number of rows
-$queryNum = $con->query("SELECT COUNT(*) as itemId FROM list");
-$resultNum = $queryNum->fetch_assoc();
+//$queryNum = $con->query("SELECT COUNT(*) as itemId FROM list");
+//$resultNum = $queryNum->fetch_assoc();
 $rowCount = $resultNum['itemId'];
 
 
@@ -38,11 +47,12 @@ $pageConfig = array(
 $pagination = new Pagination($pageConfig);
 
 // get rows
-$result = $con->query("SELECT * FROM list " . $whereSQL . $orderSQL . " LIMIT " . $start . " , " . $limit);
-
-$maxID = $con->query("SELECT MAX(itemId) AS MAX FROM `list`");
-$row = $maxID->fetch_array();
-$largestNumber = $row['MAX'];
+$result = $dbh->query("SELECT * FROM list " . $whereSQL . $orderSQL . " LIMIT " . $start . " , " . $limit);
+//$result = $con->query("SELECT * FROM list " . $whereSQL . $orderSQL . " LIMIT " . $start . " , " . $limit);
+$maxID = $dbh->query("SELECT MAX(itemId) AS MAX FROM `list`");
+//$maxID = $con->query("SELECT MAX(itemId) AS MAX FROM `list`");
+$row = $maxID->fetchAll(PDO::FETCH_ASSOC);
+$largestNumber = $row[0]["MAX"];
 $largestNumber++;
 
 if ($rowCount > 0) {
@@ -58,18 +68,18 @@ if ($rowCount > 0) {
 <td align=center><b>Delete</b></td>";
 
 
-    while ($data = $result->fetch_row()) {
+    while ($data = $result->fetch(PDO::FETCH_ASSOC)) {
         echo "<tr>";
-        echo "<td contenteditable class=\"update\" data-id=$data[0] data-column='itemId' align=center>$data[0]</td>";
-        echo "<td contenteditable class=\"update\" data-id=$data[0] data-column='itemName' align=center>$data[1]</td>";
-        echo "<td contenteditable class=\"update\" data-id=$data[0] data-column='description' >$data[2]</td>";
-        echo "<td contenteditable class=\"update\" data-id=$data[0] data-column='price' align=center>$data[3]</td>";
-        echo "<td contenteditable class=\"update\" data-id=$data[0] data-column='availability' align=center>$data[4]</td>";
-        echo "<td  data-id=$data[0] align=center >
+        echo "<td contenteditable class=\"update\" data-id=".$data['itemId']." data-column='itemId' align=center>".$data['itemId']."</td>";
+        echo "<td contenteditable class=\"update\" data-id=".$data['itemId']." data-column='itemName' align=center>".$data['itemName']."</td>";
+        echo "<td contenteditable class=\"update\" data-id=".$data['itemId']." data-column='description' >".$data['description']."</td>";
+        echo "<td contenteditable class=\"update\" data-id=".$data['itemId']." data-column='price' align=center>".$data['price']."</td>";
+        echo "<td contenteditable class=\"update\" data-id=".$data['itemId']." data-column='availability' align=center>".$data['availability']."</td>";
+        echo "<td  data-id=".$data['itemId']." align=center >
 <form action = \"\" method = \"post\">
-<input type='submit' data-id=$data[0] name='edit' id='edit' class='edit' value='$data[0]'>
+<input type='submit' data-id=".$data['itemId']." name='edit' id='edit' class='edit' value=".$data['itemId'].">
 </form></td>";
-        echo "<td class=\"update\" data-id=$data[0] align=center ><button data-id=$data[0] id='delete' value='Delete' class='delete'><i class=\"fa fa-trash\"></i></button></td>";
+        echo "<td data-id=".$data['itemId']." align=center ><button data-id=".$data['itemId']." id='delete' value='Delete' class='delete'><i class=\"fa fa-trash\"></i></button></td>";
         echo "</tr>";
 
     }

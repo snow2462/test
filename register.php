@@ -22,6 +22,21 @@ if (isset($_POST['send'])) {
         $_SESSION["contact"][$key] = $process->dataFilter($value);
             }
     }
+    $imgFile = $_FILES["user-image"]["name"];
+    $tmp_dir = $_FILES["user-image"]["tmp_name"];
+    $imgSize = $_FILES["user-image"]["size"];
+    $upload_dir = getcwd();
+    $imgExt = strtolower(pathinfo($imgFile,PATHINFO_EXTENSION));
+    $userPic = rand(1000,100000).".".$imgExt;
+    $upload_dir = $upload_dir."/upload/$userPic";
+    copy($tmp_dir, $upload_dir);
+//    move_uploaded_file($tmp_dir,$upload_dir.$userPic);
+    $_SESSION["UPLOAD_IMGS1"] = $upload_dir;
+    $newimgUpload = $_SESSION["contact"]["uploadImage"] ="upload/$userPic";
+    $image_info= $_SESSION["contact"]["user-image"] = "'$newimgUpload'";
+
+
+
 
     $_POST = $_SESSION["contact"];
     $requireValue = array(
@@ -34,7 +49,7 @@ if (isset($_POST['send'])) {
         );
     $requireValueCheck = $process->requireCheck($requireValue);
     if (!$requireValueCheck["empty_flag"]) {
-        $username = $_SESSION["contact"]["memberUsername"];
+        $username = mysqli_real_escape_string($_SESSION["contact"]["memberUsername"]);
         $checkUser = "SELECT * FROM account WHERE userName = '" . $username . "'";
         $queryCheck = $con->query($checkUser);
         if ($queryCheck->num_rows > 0) {
@@ -127,7 +142,7 @@ if (isset($_POST['send'])) {
 <div id="registerForm">
     <?php if ($error) echo "<div class='txt-contact'>" . $error . "</div>"; ?>
     <form method="post" id='regisForm' name='regisForm' onsubmit="return CheckValidator('regisForm')"
-          action="register.php#registerForm">
+          action="register.php#registerForm" enctype="multipart/form-data" >
         <table border='1' id='user_data' width="50%">
             <tr>
                 <td>Name:</td>
@@ -181,9 +196,19 @@ if (isset($_POST['send'])) {
 
             </tr>
             <tr>
+                <td>Image:</td>
+                <td colspan="2"><input type="file" accept="image/" name="user-image" onchange="document.getElementById('send').disabled=false;" /></td>
+            </tr>
+            <tr>
+                <?php if(!$image_info):?>
                 <td colspan="3" style="text-align: center">
                     <button type='submit' name="send" id='send'><i class="fa fa-registered"></i> Submit</button>
                 </td>
+                <?php else:?>
+                <td colspan="3" style="text-align: center">
+                <?php echo $image_info;?>
+                </td>
+                <?php endif?>
             </tr>
 
         </table>

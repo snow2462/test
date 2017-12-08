@@ -9,6 +9,7 @@ if(!isset($_SESSION["contact"]) || empty($_SESSION["contact"]))
 require("mail.php");
 $process = new mail_form();
 include_once ("api.php");
+include("newConnection.php");
 if(isset($_POST['submit']))
 {
     $_POST = $_SESSION["contact"];
@@ -30,14 +31,28 @@ if(isset($_POST['submit']))
         $email = $_SESSION["contact"]["memberEmail"];
         $gender = $_SESSION["contact"]["gender"];
         $option = $_SESSION["contact"]["checkbox"];
-        $maxID = $con->query("SELECT MAX(memberId) AS MAX FROM `account`");
-        $row = $maxID->fetch_array();
-        $largestNumber = $row['MAX'];
+        $image = $_SESSION["contact"]["uploadImage"];
+        $hash = md5(rand(0,1000));
+        $activate = 0;
+        $maxID = $dbh->query("SELECT MAX(memberId) AS MAX FROM `account`");
+        $row = $maxID->fetchAll(PDO::FETCH_ASSOC);
+        $largestNumber = $row[0]['MAX'];
         $largestNumber++;
         $valueExist = true;
-        $query = "INSERT INTO account (`memberId`, `username`, `password`, `name`, `email`, `gender`, `option`) 
-            VALUES ('{$largestNumber}', '{$username}', '{$password}', '{$name}', '{$email}', '{$gender}', '{$option}')";
-        $con->query($query);
+        $query = $dbh->prepare("INSERT INTO account (`memberId`, `username`, `password`, `name`, `email`, `gender`, `option`, `hash`, `activate`, `image`)
+            VALUES (:largestNumber, :username, :password, :memberName, :email, :gender, :memberOption, :hash, :activate, :image)");
+        $query->execute(array(
+                ':largestNumber' => $largestNumber,
+                ':username' => $username,
+                ':password' => $password,
+                ':memberName' => $name,
+                ':email' => $email,
+                ':gender' => $gender,
+                ':memberOption' => $option,
+                ':hash' => $hash,
+                ':activate' => $activate,
+                ':image' => $_SESSION["contact"]["uploadImage"]
+        ));
         if($valueExist)
         {
             unset($_POST);
@@ -96,6 +111,10 @@ if(isset($_POST['submit']))
             <tr>
                 <td>Option: </td>
                 <td><?php echo $_SESSION["contact"]["checkbox"]?></td>
+            </tr>
+            <tr>
+                <td>Image: </td>
+                <td><img src=<?php echo $_SESSION["contact"]["user-image"]?> width="300" height="100" /></td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: center"><button  type='submit' name="submit" id='registerButton'><i class="fa fa-registered"></i> Confirm</button></td>

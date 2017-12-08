@@ -1,13 +1,13 @@
 <?php
 session_start();
 error_reporting(0);
-include_once("api.php");
+require_once("newConnection.php");
 require("mail.php");
 $process = new mail_form();
-include_once ("api.php");
 $itemId = $_SESSION["id"];
-$query = "SELECT * FROM list WHERE itemId = " . $itemId["edit"];
-$result = $con->query($query);
+$result = $dbh->prepare("SELECT * FROM list WHERE itemId =?");
+$result->bindValue(1, $itemId["edit"], PDO::PARAM_INT);
+$result->execute();
  if(isset($_POST["edit"]))
  {
 
@@ -31,26 +31,17 @@ $result = $con->query($query);
         $availability = $_POST["availability"];
         $id = $_POST["id"];
         $valueExist = true;
-        $query = "UPDATE list SET 
-                  itemName = '" .$name. "',
-                  description = '".$description."',
-                  price = '".$price."',
-                  availability = '".$availability."'
-                  WHERE itemId = '" .$id."'";
-        $queryCheck = $con->query($query);
-        if(!$queryCheck){
-            $emailErrorMessage = "<p class =\"error_mess\" style=\"color:#C00;\">Something went wrong.</p>";
-            $valueExist = false;
-        }
-        if($valueExist)
-        {
-            $_SESSION["contact"]["state"] = 'edit';
-            echo "<scrip> window.location.href = 'CompleteEdit.php' </scrip>";
-            Header("Location: CompleteEdit.php");
-            exit;
-        }
-        else{
-            $error = $emailErrorMessage;
+        $stmt = $dbh->prepare("UPDATE list SET itemName = :itemName WHERE itemId = :itemId");
+        $stmt->execute(array('itemName' => $name, ':itemId' => $id));
+        var_dump($stmt);
+
+        try{
+                $_SESSION["contact"]["state"] = 'edit';
+                echo "<scrip> window.location.href = 'CompleteEdit.php' </scrip>";
+                Header("Location: CompleteEdit.php");
+                exit;
+        } catch(PDOException $exception) {
+                $error = "<p class =\"error_mess\" style=\"color:#C00;\">Something went wrong.</p>";
         }
     }
     else
@@ -61,9 +52,11 @@ $result = $con->query($query);
  elseif($_POST["delete"]){
      $id = $_POST["id"];
      $valueExist = true;
-     $query = "DELETE FROM list WHERE itemId = '" .$id."'";
-     $queryCheck = $con->query($query);
-     if(!$queryCheck){
+     $query = $dbh->prepare("DELETE FROM list WHERE itemId = :itemId");
+     $query->bindValue(':itemId', $id, PDO::PARAM_INT);
+     $query->execute();
+     $row = $query->rowCount();
+     if($query->rowCount() == 0){
          $emailErrorMessage = "<p class =\"error_mess\" style=\"color:#C00;\">Failed to delete item.</p>";
          $valueExist = false;
      }
@@ -88,13 +81,13 @@ $result = $con->query($query);
 <body>
 <h3>Edit item</h3>
 <div id="display">
-    <?php while ($data = $result->fetch_row()) { ?>
+    <?php while ($data = $result->fetch(PDO::FETCH_ASSOC)) { ?>
         <?php
-        $_SESSION["contact"]["id"] = $data[0];
-        $_SESSION["contact"]["name"] = $data[1];
-        $_SESSION["contact"]["description"] = $data[2];
-        $_SESSION["contact"]["price"] = $data[3];
-        $_SESSION["contact"]["availability"] = $data[4];
+        $_SESSION["contact"]["id"] = $data['itemId'];
+        $_SESSION["contact"]["name"] = $data['itemName'];
+        $_SESSION["contact"]["description"] = $data['description'];
+        $_SESSION["contact"]["price"] = $data['price'];
+        $_SESSION["contact"]["availability"] = $data['availability'];
 
         ?>
         <?php if ($error) echo "<div class='txt-contact'>" . $error . "</div>"; ?>

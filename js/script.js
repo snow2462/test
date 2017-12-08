@@ -81,8 +81,8 @@ $(document).ready(function () {
         }
     });
 
-    $(document).delegate('#delete', 'click', function () {
-        var itemId = $(this).attr("data-id");
+    $(document).on('click', '#delete', function () {
+        var itemId = $(this).attr('data-id');
         if (confirm("Are you sure you want to delete this?")) {
             $.ajax({
                 url: "delete.php",
